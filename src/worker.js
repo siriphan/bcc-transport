@@ -1,21 +1,15 @@
-// ============================================
 // BCC Transport Management - Cloudflare Worker
-// Stack: Workers + D1 + Static Assets
 // Database: bcc-transport (527776ee-49d0-4a87-9fdf-b489123ce7dd)
-// ============================================
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
-
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), {
-    status,
-    headers: { "Content-Type": "application/json; charset=utf-8", ...CORS },
+    status, headers: { "Content-Type": "application/json; charset=utf-8", ...CORS },
   });
-
 const err = (msg, status = 500) => json({ error: String(msg) }, status);
 
 export default {
@@ -25,23 +19,16 @@ export default {
     const method = request.method;
 
     if (method === "OPTIONS") return new Response(null, { headers: CORS });
-
-    if (!pathname.startsWith("/api/")) {
-      return env.ASSETS.fetch(request);
-    }
+    if (!pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
 
     try {
       const db = env.DB;
 
-      // ============ /api/vehicles ============
       if (pathname === "/api/vehicles" && method === "GET") {
-        const { results } = await db.prepare(
-          "SELECT * FROM vehicles ORDER BY plate"
-        ).all();
+        const { results } = await db.prepare("SELECT * FROM vehicles ORDER BY plate").all();
         return json(results);
       }
 
-      // ============ /api/drivers ============
       if (pathname === "/api/drivers" && method === "GET") {
         const { results } = await db.prepare(
           "SELECT * FROM drivers WHERE status='Active' ORDER BY nickname"
@@ -49,7 +36,6 @@ export default {
         return json(results);
       }
 
-      // ============ /api/trips ============
       if (pathname === "/api/trips" && method === "GET") {
         const date = url.searchParams.get("date");
         const sql = `SELECT t.*, d.nickname AS driver_name
@@ -68,10 +54,8 @@ export default {
           `INSERT INTO trips (trip_code, trip_date, plate, driver_id, job_name, job_site,
                               distance_km, plan_date, time_slot, status)
            VALUES (?,?,?,?,?,?,?,?,?,?)`
-        ).bind(
-          code, b.trip_date, b.plate, b.driver_id, b.job_name, b.job_site,
-          b.distance_km, b.plan_date, b.time_slot, b.status || "วางแผน"
-        ).run();
+        ).bind(code, b.trip_date, b.plate, b.driver_id, b.job_name, b.job_site,
+               b.distance_km, b.plan_date, b.time_slot, b.status || "วางแผน").run();
         return json({ ok: true, trip_code: code });
       }
 
@@ -88,7 +72,6 @@ export default {
         return json({ ok: true });
       }
 
-      // ============ /api/fuel ============
       if (pathname === "/api/fuel" && method === "GET") {
         const { results } = await db.prepare(
           "SELECT * FROM fuel_log ORDER BY log_date DESC LIMIT 100"
@@ -102,16 +85,13 @@ export default {
           `INSERT INTO fuel_log (log_date, plate, liters, price_per_liter, odometer_km)
            VALUES (?,?,?,?,?)`
         ).bind(b.log_date, b.plate, b.liters, b.price_per_liter, b.odometer_km).run();
-
         if (b.odometer_km) {
-          await db.prepare(
-            "UPDATE vehicles SET current_km = ? WHERE plate = ?"
-          ).bind(b.odometer_km, b.plate).run();
+          await db.prepare("UPDATE vehicles SET current_km = ? WHERE plate = ?")
+            .bind(b.odometer_km, b.plate).run();
         }
         return json({ ok: true });
       }
 
-      // ============ /api/maintenance ============
       if (pathname === "/api/maintenance" && method === "GET") {
         const { results } = await db.prepare(
           "SELECT * FROM maintenance_log ORDER BY log_date DESC"
@@ -128,7 +108,6 @@ export default {
         return json({ ok: true });
       }
 
-      // ============ /api/oilchange ============
       if (pathname === "/api/oilchange" && method === "GET") {
         const { results } = await db.prepare(
           "SELECT * FROM oil_change_log ORDER BY log_date DESC"
@@ -142,17 +121,12 @@ export default {
           `INSERT INTO oil_change_log (log_date, plate, odometer_km, cost, notes)
            VALUES (?,?,?,?,?)`
         ).bind(b.log_date, b.plate, b.odometer_km, b.cost, b.notes || "").run();
-
         await db.prepare(
-          `UPDATE vehicles
-           SET last_oil_change_date = ?, last_oil_change_km = ?
-           WHERE plate = ?`
+          `UPDATE vehicles SET last_oil_change_date = ?, last_oil_change_km = ? WHERE plate = ?`
         ).bind(b.log_date, b.odometer_km, b.plate).run();
-
         return json({ ok: true });
       }
 
-      // ============ /api/alerts ============
       if (pathname === "/api/alerts" && method === "GET") {
         const { results } = await db.prepare(
           `SELECT *,
@@ -174,7 +148,6 @@ export default {
         return json(results);
       }
 
-      // ============ /api/report/fuel ============
       if (pathname === "/api/report/fuel" && method === "GET") {
         const from = url.searchParams.get("from") || "1900-01-01";
         const to   = url.searchParams.get("to")   || "2999-12-31";
@@ -186,30 +159,23 @@ export default {
               IFNULL((SELECT SUM(liters) FROM fuel_log
                       WHERE plate=v.plate
                         AND log_date BETWEEN ? AND ?),0) AS total_liters
-           FROM vehicles v
-           ORDER BY v.plate`
+           FROM vehicles v ORDER BY v.plate`
         ).bind(from, to, from, to).all();
-
         const rows = results.map(r => ({
           ...r,
-          km_per_liter: r.total_liters > 0
-            ? +(r.total_km / r.total_liters).toFixed(2)
-            : 0,
+          km_per_liter: r.total_liters > 0 ? +(r.total_km / r.total_liters).toFixed(2) : 0,
         }));
         return json(rows);
       }
 
-      // ============ /api/dashboard ============
       if (pathname === "/api/dashboard" && method === "GET") {
         const today = new Date().toISOString().slice(0,10);
         const month = today.slice(0,7);
-
         const q = async (sql, ...bind) => {
           const stmt = bind.length ? db.prepare(sql).bind(...bind) : db.prepare(sql);
           const { results } = await stmt.all();
           return results[0];
         };
-
         const k1 = await q("SELECT COUNT(*) AS c FROM trips WHERE trip_date = ?", today);
         const k2 = await q("SELECT COUNT(*) AS c FROM trips WHERE trip_date = ? AND status='ส่งแล้ว'", today);
         const k3 = await q("SELECT COUNT(*) AS c FROM vehicles WHERE status='พร้อมใช้'");
@@ -221,7 +187,6 @@ export default {
             WHERE (julianday('now')-julianday(last_oil_change_date)) >= oil_change_days
                OR (current_km - last_oil_change_km) >= oil_change_km`
         );
-
         return json({
           trips_today: k1.c,
           completed_today: k2.c,

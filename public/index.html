@@ -12,50 +12,40 @@
   :root{
     --primary:#003366; --accent:#C00000; --ok:#2E7D32;
     --warn:#F9A825; --danger:#C62828; --plan:#1976D2;
-    --bg:#F4F6F9; --card:#ffffff; --text:#1F2937; --muted:#6B7280;
-    --border:#E5E7EB;
+    --bg:#F4F6F9; --card:#ffffff; --text:#1F2937; --muted:#6B7280; --border:#E5E7EB;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--bg);color:var(--text);font-size:16px;padding-bottom:80px}
 
-  /* Header with menu bar bg */
   .header{
     background:linear-gradient(rgba(0,30,80,0.82), rgba(0,30,80,0.92)), url('assets/menubar.jpg') center/cover no-repeat;
     color:#fff;padding:14px 16px;position:sticky;top:0;z-index:100;min-height:72px;
     box-shadow:0 2px 10px rgba(0,0,0,.2);display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--accent)
   }
   .logo{display:flex;align-items:center}
-  .logo-img{height:46px;width:auto;display:block;background:#fff;padding:5px 12px;border-radius:8px;
-    box-shadow:0 2px 10px rgba(0,0,0,.25)}
+  .logo-img{height:46px;width:auto;display:block;background:#fff;padding:5px 12px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.25)}
   .header h1{font-size:18px;font-weight:700;flex:1;text-shadow:0 2px 6px rgba(0,0,0,.6);letter-spacing:.5px}
-  .menu-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;
-    font-size:20px;cursor:pointer;width:40px;height:40px;border-radius:8px;transition:.2s}
+  .menu-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:20px;cursor:pointer;width:40px;height:40px;border-radius:8px;transition:.2s}
   .menu-btn:hover{background:var(--accent)}
 
-  /* Screens */
   .screen{display:none;padding:16px;animation:fadein .2s}
   .screen.active{display:block}
   @keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-  /* Login */
-  .login-wrap{max-width:400px;margin:40px auto;background:#fff;border-radius:16px;padding:36px 28px;
-    box-shadow:0 12px 36px rgba(0,30,80,.12)}
+  .login-wrap{max-width:400px;margin:40px auto;background:#fff;border-radius:16px;padding:36px 28px;box-shadow:0 12px 36px rgba(0,30,80,.12)}
   .login-icon{text-align:center;font-size:72px;color:var(--primary);margin-bottom:8px;line-height:1}
   .login-wrap h2{text-align:center;color:var(--primary);margin-bottom:6px;font-weight:700;font-size:22px}
   .login-wrap .subtitle{text-align:center;color:var(--muted);font-size:14px;margin-bottom:22px}
 
   .form-group{margin-bottom:14px}
   .form-group label{display:block;margin-bottom:6px;font-weight:600;color:var(--text)}
-  .form-group input,.form-group select,.form-group textarea{
-    width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:16px;background:#fff}
+  .form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:16px;background:#fff}
   .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,51,102,.1)}
 
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border:0;border-radius:8px;
-    font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;transition:transform .1s, opacity .2s}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border:0;border-radius:8px;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;transition:transform .1s, opacity .2s}
   .btn:active{transform:scale(.97)}
   .btn-primary{background:var(--accent);color:#fff;width:100%}
   .btn-secondary{background:var(--primary);color:#fff}
-  .btn-outline{background:transparent;border:1px solid var(--primary);color:var(--primary)}
   .btn-sm{padding:6px 12px;font-size:14px}
 
   .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:12px}
@@ -71,9 +61,7 @@
   .kpi .unit{font-size:12px;color:var(--muted);margin-left:4px}
 
   .nav-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .nav-tile{background:#fff;border:0;border-radius:12px;padding:16px 8px;cursor:pointer;text-align:center;
-    box-shadow:0 2px 8px rgba(0,0,0,.05);font-family:inherit;font-size:13px;color:var(--text);font-weight:600;
-    display:flex;flex-direction:column;align-items:center;gap:6px;transition:.2s}
+  .nav-tile{background:#fff;border:0;border-radius:12px;padding:16px 8px;cursor:pointer;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);font-family:inherit;font-size:13px;color:var(--text);font-weight:600;display:flex;flex-direction:column;align-items:center;gap:6px;transition:.2s}
   .nav-tile .ico{font-size:28px}
   .nav-tile:hover{background:var(--primary);color:#fff;transform:translateY(-2px)}
 
@@ -95,8 +83,7 @@
   .schedule-table td.veh{background:#f8f9fb;font-weight:600;text-align:left;min-width:120px}
   .slot-empty{color:var(--muted);font-size:14px}
 
-  table.data{width:100%;background:#fff;border-collapse:collapse;border-radius:12px;overflow:hidden;
-    box-shadow:0 2px 8px rgba(0,0,0,.05);font-size:14px}
+  table.data{width:100%;background:#fff;border-collapse:collapse;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);font-size:14px}
   table.data th{background:var(--primary);color:#fff;padding:10px;text-align:left;font-weight:600}
   table.data td{padding:10px;border-bottom:1px solid var(--border)}
   table.data tr:last-child td{border-bottom:0}
@@ -106,15 +93,12 @@
   .alert-item .meta{color:var(--muted);font-size:13px;margin-top:4px}
   .alert-item .reason{display:inline-block;background:var(--danger);color:#fff;padding:3px 8px;border-radius:6px;font-size:12px;margin-top:8px}
 
-  .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);
-    display:flex;justify-content:space-around;padding:8px 0;z-index:99;box-shadow:0 -2px 8px rgba(0,0,0,.05)}
-  .bottom-nav button{background:transparent;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;
-    gap:2px;color:var(--muted);font-family:inherit;font-size:11px;padding:4px 12px}
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0;z-index:99;box-shadow:0 -2px 8px rgba(0,0,0,.05)}
+  .bottom-nav button{background:transparent;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--muted);font-family:inherit;font-size:11px;padding:4px 12px}
   .bottom-nav button.active{color:var(--accent)}
   .bottom-nav button .ico{font-size:22px}
 
-  .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;
-    padding:10px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);z-index:200;animation:slideDown .3s;max-width:90%}
+  .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:10px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);z-index:200;animation:slideDown .3s;max-width:90%}
   .toast.err{background:var(--danger)}
   @keyframes slideDown{from{transform:translate(-50%,-20px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
 
@@ -126,31 +110,23 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="header">
-  <div class="logo">
-    <img src="assets/logo.png" alt="BCC Bangkok Cable" class="logo-img">
-  </div>
+  <div class="logo"><img src="assets/logo.png" alt="BCC" class="logo-img"></div>
   <h1 id="screenTitle">ระบบจัดการขนส่ง BCC</h1>
   <button class="menu-btn" onclick="if(confirm('ออกจากระบบ?'))doLogout()" title="ออกจากระบบ">⎋</button>
 </header>
 
-<!-- LOGIN -->
 <section id="login" class="screen active">
   <div class="login-wrap">
     <div class="login-icon">🚛</div>
     <h2>Transport Management</h2>
     <div class="subtitle">ระบบจัดการขนส่ง BCC</div>
-    <div class="form-group">
-      <label>ชื่อผู้ใช้</label>
+    <div class="form-group"><label>ชื่อผู้ใช้</label>
       <input type="text" id="loginUser" placeholder="ใส่ชื่อผู้ใช้" autocomplete="username"
-             onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()">
-    </div>
-    <div class="form-group">
-      <label>รหัสผ่าน</label>
+             onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()"></div>
+    <div class="form-group"><label>รหัสผ่าน</label>
       <input type="password" id="loginPass" placeholder="••••••" autocomplete="current-password"
-             onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
+             onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="btn btn-primary" onclick="doLogin()">เข้าสู่ระบบ</button>
     <div style="text-align:center;margin-top:16px;font-size:14px;color:var(--muted)">
       <a href="#" style="color:var(--primary);text-decoration:none">ลืมรหัสผ่าน?</a> |
@@ -159,7 +135,6 @@
   </div>
 </section>
 
-<!-- DASHBOARD -->
 <section id="dashboard" class="screen">
   <div class="kpi-grid">
     <div class="kpi"><div class="label">เที่ยววันนี้</div><div class="value" id="kpiTrips">-</div></div>
@@ -169,9 +144,7 @@
     <div class="kpi warn"><div class="label">กม./ลิตร เฉลี่ย</div><div class="value" id="kpiKmL">-</div></div>
     <div class="kpi accent"><div class="label">ต้องเปลี่ยนน้ำมัน</div><div class="value" id="kpiOil">-</div></div>
   </div>
-
-  <div class="card">
-    <h3>📋 เมนูหลัก</h3>
+  <div class="card"><h3>📋 เมนูหลัก</h3>
     <div class="nav-grid">
       <button class="nav-tile" onclick="show('schedule')"><span class="ico">📅</span>ตารางขนส่ง</button>
       <button class="nav-tile" onclick="show('newtrip')"><span class="ico">➕</span>สร้าง Trip</button>
@@ -185,51 +158,36 @@
   </div>
 </section>
 
-<!-- SCHEDULE -->
 <section id="schedule" class="screen">
   <div class="schedule-controls">
     <input type="date" id="schedDate">
     <button class="btn btn-secondary btn-sm" onclick="loadSchedule()">โหลด</button>
   </div>
-  <div class="schedule-table">
-    <table>
-      <thead>
-        <tr>
-          <th>ทะเบียนรถ</th>
-          <th>เช้าเที่ยว 1</th><th>เช้าเที่ยว 2</th>
-          <th>บ่ายเที่ยว 1</th><th>บ่ายเที่ยว 2</th><th>บ่ายเที่ยว 3</th>
-        </tr>
-      </thead>
-      <tbody id="schedBody"></tbody>
-    </table>
-  </div>
+  <div class="schedule-table"><table>
+    <thead><tr><th>ทะเบียนรถ</th><th>เช้าเที่ยว 1</th><th>เช้าเที่ยว 2</th><th>บ่ายเที่ยว 1</th><th>บ่ายเที่ยว 2</th><th>บ่ายเที่ยว 3</th></tr></thead>
+    <tbody id="schedBody"></tbody>
+  </table></div>
 </section>
 
-<!-- NEW TRIP -->
 <section id="newtrip" class="screen">
-  <div class="card">
-    <h3>➕ บันทึก Trip ขนส่ง</h3>
+  <div class="card"><h3>➕ บันทึก Trip ขนส่ง</h3>
     <div class="form-group"><label>วันที่</label><input type="date" id="tDate"></div>
     <div class="form-group"><label>ทะเบียนรถ</label><select id="tPlate"></select></div>
     <div class="form-group"><label>พนักงานขับ</label><select id="tDriver"></select></div>
     <div class="form-group"><label>ชื่องาน</label><input type="text" id="tJob" placeholder="เช่น ส่งสายไฟ"></div>
     <div class="form-group"><label>หน้างาน / ปลายทาง</label><input type="text" id="tSite"></div>
     <div class="form-group"><label>ระยะทางไป-กลับ (กม.)</label><input type="number" id="tDist"></div>
-    <div class="form-group"><label>ช่วงเวลา</label>
-      <select id="tSlot">
-        <option>เช้าเที่ยวที่ 1</option><option>เช้าเที่ยวที่ 2</option>
-        <option>บ่ายเที่ยวที่ 1</option><option>บ่ายเที่ยวที่ 2</option><option>บ่ายเที่ยวที่ 3</option>
-      </select>
-    </div>
+    <div class="form-group"><label>ช่วงเวลา</label><select id="tSlot">
+      <option>เช้าเที่ยวที่ 1</option><option>เช้าเที่ยวที่ 2</option>
+      <option>บ่ายเที่ยวที่ 1</option><option>บ่ายเที่ยวที่ 2</option><option>บ่ายเที่ยวที่ 3</option>
+    </select></div>
     <div class="form-group"><label>วันกำหนดส่ง</label><input type="date" id="tPlan"></div>
     <button class="btn btn-primary" onclick="saveTrip()">บันทึก Trip</button>
   </div>
 </section>
 
-<!-- FUEL -->
 <section id="fuel" class="screen">
-  <div class="card">
-    <h3>⛽ บันทึกเติมน้ำมัน</h3>
+  <div class="card"><h3>⛽ บันทึกเติมน้ำมัน</h3>
     <div class="form-group"><label>วันที่</label><input type="date" id="fDate"></div>
     <div class="form-group"><label>ทะเบียนรถ</label><select id="fPlate"></select></div>
     <div class="form-group"><label>จำนวนลิตร</label><input type="number" id="fLit" step="0.01"></div>
@@ -240,18 +198,14 @@
   <div class="card"><h3>ประวัติล่าสุด</h3><div id="fuelList"></div></div>
 </section>
 
-<!-- MAINTENANCE -->
 <section id="maintenance" class="screen">
-  <div class="card">
-    <h3>🔧 บันทึกซ่อมบำรุง</h3>
+  <div class="card"><h3>🔧 บันทึกซ่อมบำรุง</h3>
     <div class="form-group"><label>วันที่</label><input type="date" id="mDate"></div>
     <div class="form-group"><label>ทะเบียนรถ</label><select id="mPlate"></select></div>
-    <div class="form-group"><label>ประเภทการซ่อม</label>
-      <select id="mType">
-        <option>เครื่องยนต์</option><option>ช่วงล่าง</option><option>ไฟฟ้า</option>
-        <option>ยาง</option><option>เบรค</option><option>อื่นๆ</option>
-      </select>
-    </div>
+    <div class="form-group"><label>ประเภทการซ่อม</label><select id="mType">
+      <option>เครื่องยนต์</option><option>ช่วงล่าง</option><option>ไฟฟ้า</option>
+      <option>ยาง</option><option>เบรค</option><option>อื่นๆ</option>
+    </select></div>
     <div class="form-group"><label>ค่าซ่อม (฿)</label><input type="number" id="mCost"></div>
     <div class="form-group"><label>อู่ซ่อม</label><input type="text" id="mGarage"></div>
     <div class="form-group"><label>หมายเหตุ</label><textarea id="mNote" rows="2"></textarea></div>
@@ -260,10 +214,8 @@
   <div class="card"><h3>ประวัติซ่อมล่าสุด</h3><div id="maintList"></div></div>
 </section>
 
-<!-- OIL CHANGE -->
 <section id="oilchange" class="screen">
-  <div class="card">
-    <h3>🛢️ บันทึกถ่ายน้ำมันเครื่อง</h3>
+  <div class="card"><h3>🛢️ บันทึกถ่ายน้ำมันเครื่อง</h3>
     <div class="form-group"><label>วันที่</label><input type="date" id="oDate"></div>
     <div class="form-group"><label>ทะเบียนรถ</label><select id="oPlate"></select></div>
     <div class="form-group"><label>เลขไมล์ที่เปลี่ยน</label><input type="number" id="oKm"></div>
@@ -273,17 +225,12 @@
   </div>
 </section>
 
-<!-- ALERT -->
 <section id="alert" class="screen">
-  <div class="card"><h3>🚨 รถที่ต้องเปลี่ยนน้ำมันเครื่อง</h3>
-    <div id="alertList"></div>
-  </div>
+  <div class="card"><h3>🚨 รถที่ต้องเปลี่ยนน้ำมันเครื่อง</h3><div id="alertList"></div></div>
 </section>
 
-<!-- REPORT -->
 <section id="report" class="screen">
-  <div class="card">
-    <h3>📈 รายงานสิ้นเปลืองน้ำมัน</h3>
+  <div class="card"><h3>📈 รายงานสิ้นเปลืองน้ำมัน</h3>
     <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
       <input type="date" id="rFrom" style="flex:1;min-width:130px;padding:10px;border:1px solid var(--border);border-radius:8px">
       <input type="date" id="rTo" style="flex:1;min-width:130px;padding:10px;border:1px solid var(--border);border-radius:8px">
@@ -292,25 +239,20 @@
     <canvas id="reportChart" height="200"></canvas>
   </div>
   <div class="card"><h3>ตารางสรุป</h3>
-    <div style="overflow-x:auto">
-      <table class="data">
-        <thead><tr><th>ทะเบียน</th><th>ประเภท</th><th>กม.</th><th>ลิตร</th><th>กม./ลิตร</th></tr></thead>
-        <tbody id="reportBody"></tbody>
-      </table>
-    </div>
+    <div style="overflow-x:auto"><table class="data">
+      <thead><tr><th>ทะเบียน</th><th>ประเภท</th><th>กม.</th><th>ลิตร</th><th>กม./ลิตร</th></tr></thead>
+      <tbody id="reportBody"></tbody>
+    </table></div>
   </div>
 </section>
 
-<!-- OVERVIEW -->
 <section id="overview" class="screen">
-  <div class="card">
-    <h3>🚛 ภาพรวมรถรายคัน</h3>
+  <div class="card"><h3>🚛 ภาพรวมรถรายคัน</h3>
     <select id="ovPlate" onchange="loadOverview()" style="width:100%;padding:11px;border:1px solid var(--border);border-radius:8px"></select>
   </div>
   <div id="ovDetail"></div>
 </section>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button onclick="show('dashboard')" data-nav="dashboard"><span class="ico">📊</span>หน้าแรก</button>
   <button onclick="show('schedule')" data-nav="schedule"><span class="ico">📅</span>ตาราง</button>
@@ -378,11 +320,6 @@ function doLogout(){
   localStorage.removeItem('bcc_authed');
   document.getElementById('loginPass').value = '';
   show('login');
-}
-
-function fillSelect(id, items, value, label){
-  const el = document.getElementById(id);
-  el.innerHTML = items.map(it=>`<option value="${it[value]}">${it[label]||it[value]}</option>`).join('');
 }
 
 async function loadMasters(){
@@ -583,9 +520,7 @@ async function loadOverview(){
 
 window.addEventListener('load', async ()=>{
   await loadMasters();
-  if(localStorage.getItem('bcc_authed') === '1'){
-    show('dashboard');
-  }
+  if(localStorage.getItem('bcc_authed') === '1'){ show('dashboard'); }
 });
 </script>
 </body>
