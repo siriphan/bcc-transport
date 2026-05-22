@@ -18,18 +18,19 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--bg);color:var(--text);font-size:16px;padding-bottom:80px}
 
-  /* Header */
-  .header{background:var(--primary);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:100;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--accent)}
-  .logo{display:flex;align-items:center;gap:8px}
-  .logo-circle{width:36px;height:36px;background:var(--accent);border-radius:50%;display:flex;align-items:center;
-    justify-content:center;color:#fff;font-weight:700;flex-shrink:0;position:relative}
-  .logo-circle svg{width:24px;height:24px}
-  .logo-text{display:flex;flex-direction:column;line-height:1}
-  .logo-text b{font-size:18px;font-weight:700}
-  .logo-text small{font-size:9px;letter-spacing:1px;color:#ffd}
-  .header h1{font-size:16px;font-weight:600;flex:1}
-  .menu-btn{background:transparent;border:0;color:#fff;font-size:24px;cursor:pointer}
+  /* Header with menu bar bg */
+  .header{
+    background:linear-gradient(rgba(0,30,80,0.82), rgba(0,30,80,0.92)), url('assets/menubar.jpg') center/cover no-repeat;
+    color:#fff;padding:14px 16px;position:sticky;top:0;z-index:100;min-height:72px;
+    box-shadow:0 2px 10px rgba(0,0,0,.2);display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--accent)
+  }
+  .logo{display:flex;align-items:center}
+  .logo-img{height:46px;width:auto;display:block;background:#fff;padding:5px 12px;border-radius:8px;
+    box-shadow:0 2px 10px rgba(0,0,0,.25)}
+  .header h1{font-size:18px;font-weight:700;flex:1;text-shadow:0 2px 6px rgba(0,0,0,.6);letter-spacing:.5px}
+  .menu-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;
+    font-size:20px;cursor:pointer;width:40px;height:40px;border-radius:8px;transition:.2s}
+  .menu-btn:hover{background:var(--accent)}
 
   /* Screens */
   .screen{display:none;padding:16px;animation:fadein .2s}
@@ -37,18 +38,18 @@
   @keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
   /* Login */
-  .login-wrap{max-width:380px;margin:40px auto;background:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
-  .login-icon{text-align:center;font-size:64px;color:var(--primary);margin-bottom:8px}
-  .login-wrap h2{text-align:center;color:var(--primary);margin-bottom:24px;font-weight:600}
+  .login-wrap{max-width:400px;margin:40px auto;background:#fff;border-radius:16px;padding:36px 28px;
+    box-shadow:0 12px 36px rgba(0,30,80,.12)}
+  .login-icon{text-align:center;font-size:72px;color:var(--primary);margin-bottom:8px;line-height:1}
+  .login-wrap h2{text-align:center;color:var(--primary);margin-bottom:6px;font-weight:700;font-size:22px}
+  .login-wrap .subtitle{text-align:center;color:var(--muted);font-size:14px;margin-bottom:22px}
 
-  /* Forms */
   .form-group{margin-bottom:14px}
   .form-group label{display:block;margin-bottom:6px;font-weight:600;color:var(--text)}
   .form-group input,.form-group select,.form-group textarea{
     width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:16px;background:#fff}
   .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,51,102,.1)}
 
-  /* Buttons */
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border:0;border-radius:8px;
     font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;transition:transform .1s, opacity .2s}
   .btn:active{transform:scale(.97)}
@@ -57,11 +58,9 @@
   .btn-outline{background:transparent;border:1px solid var(--primary);color:var(--primary)}
   .btn-sm{padding:6px 12px;font-size:14px}
 
-  /* Cards */
   .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:12px}
   .card h3{color:var(--primary);font-weight:600;margin-bottom:12px;font-size:18px}
 
-  /* KPI grid */
   .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
   .kpi{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);border-left:4px solid var(--primary)}
   .kpi.accent{border-left-color:var(--accent)}
@@ -71,15 +70,13 @@
   .kpi .value{font-size:24px;font-weight:700;color:var(--primary)}
   .kpi .unit{font-size:12px;color:var(--muted);margin-left:4px}
 
-  /* Nav grid */
   .nav-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
   .nav-tile{background:#fff;border:0;border-radius:12px;padding:16px 8px;cursor:pointer;text-align:center;
     box-shadow:0 2px 8px rgba(0,0,0,.05);font-family:inherit;font-size:13px;color:var(--text);font-weight:600;
-    display:flex;flex-direction:column;align-items:center;gap:6px}
+    display:flex;flex-direction:column;align-items:center;gap:6px;transition:.2s}
   .nav-tile .ico{font-size:28px}
-  .nav-tile:hover{background:var(--primary);color:#fff}
+  .nav-tile:hover{background:var(--primary);color:#fff;transform:translateY(-2px)}
 
-  /* Badges */
   .badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:600;color:#fff}
   .badge.plan{background:var(--plan)}
   .badge.progress{background:var(--warn)}
@@ -89,34 +86,26 @@
   .badge.inuse{background:var(--warn)}
   .badge.maint{background:var(--danger)}
 
-  /* Schedule Grid */
   .schedule-controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
   .schedule-controls input{flex:1;padding:10px;border:1px solid var(--border);border-radius:8px}
-  .schedule-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;
-    box-shadow:0 2px 8px rgba(0,0,0,.05);font-size:13px;display:block;overflow-x:auto}
-  .schedule-table table{width:100%;border-collapse:collapse;min-width:700px}
+  .schedule-table{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);overflow-x:auto}
+  .schedule-table table{width:100%;border-collapse:collapse;min-width:700px;font-size:13px}
   .schedule-table th,.schedule-table td{padding:8px;text-align:center;border:1px solid var(--border);vertical-align:middle}
   .schedule-table th{background:var(--primary);color:#fff;font-weight:600;font-size:12px}
   .schedule-table td.veh{background:#f8f9fb;font-weight:600;text-align:left;min-width:120px}
   .slot-empty{color:var(--muted);font-size:14px}
-  .slot-cell{cursor:pointer}
-  .slot-cell:hover{outline:2px solid var(--primary)}
 
-  /* Tables */
   table.data{width:100%;background:#fff;border-collapse:collapse;border-radius:12px;overflow:hidden;
     box-shadow:0 2px 8px rgba(0,0,0,.05);font-size:14px}
   table.data th{background:var(--primary);color:#fff;padding:10px;text-align:left;font-weight:600}
   table.data td{padding:10px;border-bottom:1px solid var(--border)}
   table.data tr:last-child td{border-bottom:0}
 
-  /* Alert items */
-  .alert-item{background:#fff;border-left:4px solid var(--danger);border-radius:8px;padding:14px;margin-bottom:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.05)}
+  .alert-item{background:#fff;border-left:4px solid var(--danger);border-radius:8px;padding:14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
   .alert-item .plate{font-weight:700;color:var(--primary);font-size:18px}
   .alert-item .meta{color:var(--muted);font-size:13px;margin-top:4px}
   .alert-item .reason{display:inline-block;background:var(--danger);color:#fff;padding:3px 8px;border-radius:6px;font-size:12px;margin-top:8px}
 
-  /* Bottom nav */
   .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);
     display:flex;justify-content:space-around;padding:8px 0;z-index:99;box-shadow:0 -2px 8px rgba(0,0,0,.05)}
   .bottom-nav button{background:transparent;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;
@@ -124,16 +113,14 @@
   .bottom-nav button.active{color:var(--accent)}
   .bottom-nav button .ico{font-size:22px}
 
-  /* Toast */
   .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;
-    padding:10px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);z-index:200;animation:slideDown .3s}
+    padding:10px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);z-index:200;animation:slideDown .3s;max-width:90%}
   .toast.err{background:var(--danger)}
   @keyframes slideDown{from{transform:translate(-50%,-20px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
 
   @media(min-width:768px){
     .kpi-grid{grid-template-columns:repeat(3,1fr)}
     body{max-width:1200px;margin:0 auto;background:#fff}
-    .header{border-radius:0}
   }
 </style>
 </head>
@@ -142,17 +129,10 @@
 <!-- HEADER -->
 <header class="header">
   <div class="logo">
-    <div class="logo-circle">
-      <svg viewBox="0 0 24 24" fill="#fff">
-        <circle cx="12" cy="6" r="2"/><circle cx="7" cy="10" r="2"/><circle cx="17" cy="10" r="2"/>
-        <circle cx="12" cy="12" r="2"/><circle cx="7" cy="16" r="2"/><circle cx="17" cy="16" r="2"/>
-        <circle cx="12" cy="18" r="2"/>
-      </svg>
-    </div>
-    <div class="logo-text"><b>BCC</b><small>BANGKOK CABLE</small></div>
+    <img src="assets/logo.png" alt="BCC Bangkok Cable" class="logo-img">
   </div>
-  <h1 id="screenTitle">Transport Management</h1>
-  <button class="menu-btn" onclick="alert('เมนู: เลือกหน้าจากแถบล่าง')">☰</button>
+  <h1 id="screenTitle">ระบบจัดการขนส่ง BCC</h1>
+  <button class="menu-btn" onclick="if(confirm('ออกจากระบบ?'))doLogout()" title="ออกจากระบบ">⎋</button>
 </header>
 
 <!-- LOGIN -->
@@ -160,13 +140,16 @@
   <div class="login-wrap">
     <div class="login-icon">🚛</div>
     <h2>Transport Management</h2>
+    <div class="subtitle">ระบบจัดการขนส่ง BCC</div>
     <div class="form-group">
       <label>ชื่อผู้ใช้</label>
-      <input type="text" id="loginUser" placeholder="ใส่ชื่อของคุณ" value="Siriphan">
+      <input type="text" id="loginUser" placeholder="ใส่ชื่อผู้ใช้" autocomplete="username"
+             onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()">
     </div>
     <div class="form-group">
       <label>รหัสผ่าน</label>
-      <input type="password" id="loginPass" placeholder="••••••" value="demo">
+      <input type="password" id="loginPass" placeholder="••••••" autocomplete="current-password"
+             onkeydown="if(event.key==='Enter')doLogin()">
     </div>
     <button class="btn btn-primary" onclick="doLogin()">เข้าสู่ระบบ</button>
     <div style="text-align:center;margin-top:16px;font-size:14px;color:var(--muted)">
@@ -182,9 +165,9 @@
     <div class="kpi"><div class="label">เที่ยววันนี้</div><div class="value" id="kpiTrips">-</div></div>
     <div class="kpi ok"><div class="label">ส่งแล้ววันนี้</div><div class="value" id="kpiDone">-</div></div>
     <div class="kpi ok"><div class="label">รถพร้อมใช้</div><div class="value" id="kpiAvail">-</div></div>
-    <div class="kpi accent"><div class="label">ค่าซ่อมเดือนนี้</div><div class="value" id="kpiMaint">-<span class="unit">฿</span></div></div>
+    <div class="kpi accent"><div class="label">ค่าซ่อมเดือนนี้</div><div class="value" id="kpiMaint">-</div></div>
     <div class="kpi warn"><div class="label">กม./ลิตร เฉลี่ย</div><div class="value" id="kpiKmL">-</div></div>
-    <div class="kpi accent"><div class="label">ต้องเปลี่ยนน้ำมัน</div><div class="value" id="kpiOil">-<span class="unit">คัน</span></div></div>
+    <div class="kpi accent"><div class="label">ต้องเปลี่ยนน้ำมัน</div><div class="value" id="kpiOil">-</div></div>
   </div>
 
   <div class="card">
@@ -301,9 +284,9 @@
 <section id="report" class="screen">
   <div class="card">
     <h3>📈 รายงานสิ้นเปลืองน้ำมัน</h3>
-    <div style="display:flex;gap:8px;margin-bottom:12px">
-      <input type="date" id="rFrom" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px">
-      <input type="date" id="rTo" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px">
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <input type="date" id="rFrom" style="flex:1;min-width:130px;padding:10px;border:1px solid var(--border);border-radius:8px">
+      <input type="date" id="rTo" style="flex:1;min-width:130px;padding:10px;border:1px solid var(--border);border-radius:8px">
       <button class="btn btn-secondary btn-sm" onclick="loadReport()">ค้นหา</button>
     </div>
     <canvas id="reportChart" height="200"></canvas>
@@ -337,7 +320,7 @@
 </nav>
 
 <script>
-const API = ""; // same origin
+const API = "";
 const TITLES = {
   login:"เข้าสู่ระบบ", dashboard:"Dashboard", schedule:"ตารางขนส่งรายวัน",
   newtrip:"สร้าง Trip", fuel:"เติมน้ำมัน", maintenance:"ซ่อมบำรุง",
@@ -361,7 +344,8 @@ async function api(path, opts={}){
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.getElementById('screenTitle').textContent = TITLES[id] || 'Transport';
+  document.getElementById('screenTitle').textContent =
+    id==='login' ? 'ระบบจัดการขนส่ง BCC' : (TITLES[id] || 'Transport');
   document.querySelectorAll('.bottom-nav button').forEach(b=>{
     b.classList.toggle('active', b.dataset.nav===id);
   });
@@ -376,10 +360,24 @@ function show(id){
 }
 
 function doLogin(){
-  const u=document.getElementById('loginUser').value.trim();
-  if(!u){ toast('กรุณากรอกชื่อผู้ใช้', true); return; }
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if(!u || !p){ toast('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน', true); return; }
+  if(u !== 'BCC' || p !== 'BCC@2026'){
+    toast('❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง', true);
+    document.getElementById('loginPass').value = '';
+    return;
+  }
   localStorage.setItem('bcc_user', u);
+  localStorage.setItem('bcc_authed', '1');
+  toast('✅ เข้าสู่ระบบสำเร็จ');
   show('dashboard');
+}
+
+function doLogout(){
+  localStorage.removeItem('bcc_authed');
+  document.getElementById('loginPass').value = '';
+  show('login');
 }
 
 function fillSelect(id, items, value, label){
@@ -392,16 +390,17 @@ async function loadMasters(){
     VEHICLES = await api('/api/vehicles');
     DRIVERS = await api('/api/drivers');
     ['tPlate','fPlate','mPlate','oPlate','ovPlate'].forEach(id=>{
-      document.getElementById(id).innerHTML =
-        VEHICLES.map(v=>`<option value="${v.plate}">${v.plate} - ${v.vehicle_type}</option>`).join('');
+      const el=document.getElementById(id);
+      if(el) el.innerHTML = VEHICLES.map(v=>`<option value="${v.plate}">${v.plate} - ${v.vehicle_type}</option>`).join('');
     });
-    document.getElementById('tDriver').innerHTML =
-      DRIVERS.map(d=>`<option value="${d.id}">${d.nickname} - ${d.first_name||''}</option>`).join('');
+    const dEl = document.getElementById('tDriver');
+    if(dEl) dEl.innerHTML = DRIVERS.map(d=>`<option value="${d.id}">${d.nickname} - ${d.first_name||''}</option>`).join('');
     const today = new Date().toISOString().slice(0,10);
     ['schedDate','tDate','fDate','mDate','oDate','tPlan','rTo'].forEach(id=>{
       const el=document.getElementById(id); if(el) el.value = today;
     });
-    document.getElementById('rFrom').value = new Date(Date.now()-30*86400000).toISOString().slice(0,10);
+    const rFrom = document.getElementById('rFrom');
+    if(rFrom) rFrom.value = new Date(Date.now()-30*86400000).toISOString().slice(0,10);
   }catch(e){ console.error(e); toast('โหลดข้อมูลล้มเหลว: '+e.message, true); }
 }
 
@@ -418,7 +417,6 @@ async function loadDashboard(){
 }
 
 const SLOTS = ['เช้าเที่ยวที่ 1','เช้าเที่ยวที่ 2','บ่ายเที่ยวที่ 1','บ่ายเที่ยวที่ 2','บ่ายเที่ยวที่ 3'];
-
 function badgeClass(s){
   return s==='ส่งแล้ว'?'done':s==='ระหว่างส่ง'?'progress':s==='ยกเลิก'?'cancel':'plan';
 }
@@ -431,8 +429,8 @@ async function loadSchedule(){
     tbody.innerHTML = VEHICLES.map(v=>{
       const cells = SLOTS.map(s=>{
         const t = trips.find(x=>x.plate===v.plate && x.time_slot===s);
-        if(!t) return `<td class="slot-cell"><span class="slot-empty">—</span></td>`;
-        return `<td class="slot-cell"><div style="font-weight:600;font-size:13px">${t.job_name||''}</div>
+        if(!t) return `<td><span class="slot-empty">—</span></td>`;
+        return `<td><div style="font-weight:600;font-size:13px">${t.job_name||''}</div>
                 <span class="badge ${badgeClass(t.status)}" style="margin-top:4px;font-size:11px">${t.status}</span></td>`;
       }).join('');
       return `<tr><td class="veh">${v.plate}<br><small style="color:var(--muted)">${v.vehicle_type}</small></td>${cells}</tr>`;
@@ -525,7 +523,7 @@ async function loadAlerts(){
     el.innerHTML = list.map(v=>`
       <div class="alert-item">
         <div class="plate">${v.plate} <small style="font-weight:400;color:var(--muted)">${v.vehicle_type}</small></div>
-        <div class="meta">ห่างจากครั้งล่าสุด: <b>${v.days_since}</b> วัน | <b>${v.km_since.toLocaleString()}</b> กม.</div>
+        <div class="meta">ห่างจากครั้งล่าสุด: <b>${v.days_since}</b> วัน | <b>${(v.km_since||0).toLocaleString()}</b> กม.</div>
         <div class="reason">${v.reason}</div>
       </div>`).join('');
   }catch(e){ toast(e.message,true); }
@@ -540,16 +538,13 @@ async function loadReport(){
       `<tr><td><b>${r.plate}</b></td><td>${r.vehicle_type}</td>
        <td>${r.total_km.toLocaleString()}</td><td>${r.total_liters.toLocaleString()}</td>
        <td><b style="color:var(--accent)">${r.km_per_liter}</b></td></tr>`).join('');
-
     if(chartRef) chartRef.destroy();
     const ctx = document.getElementById('reportChart').getContext('2d');
     chartRef = new Chart(ctx, {
       type:'bar',
-      data:{
-        labels:data.map(r=>r.plate),
+      data:{labels:data.map(r=>r.plate),
         datasets:[{label:'กม./ลิตร', data:data.map(r=>r.km_per_liter),
-          backgroundColor:'#003366', borderRadius:6}]
-      },
+          backgroundColor:'#003366', borderRadius:6}]},
       options:{plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
     });
   }catch(e){ toast(e.message,true); }
@@ -567,7 +562,6 @@ async function loadOverview(){
     const totalFuel = fuel.reduce((s,f)=>s+(f.liters||0),0);
     const fuelCost = fuel.reduce((s,f)=>s+(f.liters||0)*(f.price_per_liter||0),0);
     const maintCost = maint.reduce((s,m)=>s+(m.cost||0),0);
-
     document.getElementById('ovDetail').innerHTML = `
       <div class="kpi-grid">
         <div class="kpi"><div class="label">ระยะทางรวม</div><div class="value">${totalKM.toLocaleString()}<span class="unit">กม.</span></div></div>
@@ -587,11 +581,9 @@ async function loadOverview(){
   }catch(e){ toast(e.message,true); }
 }
 
-// Init
 window.addEventListener('load', async ()=>{
   await loadMasters();
-  if(localStorage.getItem('bcc_user')){
-    document.getElementById('loginUser').value = localStorage.getItem('bcc_user');
+  if(localStorage.getItem('bcc_authed') === '1'){
     show('dashboard');
   }
 });

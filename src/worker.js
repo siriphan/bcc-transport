@@ -1,6 +1,7 @@
 // ============================================
 // BCC Transport Management - Cloudflare Worker
-// Stack: Cloudflare Workers + D1 + Static Assets
+// Stack: Workers + D1 + Static Assets
+// Database: bcc-transport (527776ee-49d0-4a87-9fdf-b489123ce7dd)
 // ============================================
 
 const CORS = {
@@ -23,10 +24,8 @@ export default {
     const { pathname } = url;
     const method = request.method;
 
-    // CORS preflight
     if (method === "OPTIONS") return new Response(null, { headers: CORS });
 
-    // Static assets fallback
     if (!pathname.startsWith("/api/")) {
       return env.ASSETS.fetch(request);
     }
@@ -76,15 +75,13 @@ export default {
         return json({ ok: true, trip_code: code });
       }
 
-      // PATCH /api/trips/:id
       const tripMatch = pathname.match(/^\/api\/trips\/(\d+)$/);
       if (tripMatch && method === "PATCH") {
         const id = tripMatch[1];
         const b = await request.json();
-        const fields = [];
-        const vals = [];
-        if (b.status)       { fields.push("status = ?");       vals.push(b.status); }
-        if (b.actual_date)  { fields.push("actual_date = ?");  vals.push(b.actual_date); }
+        const fields = [], vals = [];
+        if (b.status)      { fields.push("status = ?");      vals.push(b.status); }
+        if (b.actual_date) { fields.push("actual_date = ?"); vals.push(b.actual_date); }
         if (!fields.length) return err("No fields to update", 400);
         vals.push(id);
         await db.prepare(`UPDATE trips SET ${fields.join(", ")} WHERE id = ?`).bind(...vals).run();
@@ -146,7 +143,6 @@ export default {
            VALUES (?,?,?,?,?)`
         ).bind(b.log_date, b.plate, b.odometer_km, b.cost, b.notes || "").run();
 
-        // reset counter
         await db.prepare(
           `UPDATE vehicles
            SET last_oil_change_date = ?, last_oil_change_km = ?
