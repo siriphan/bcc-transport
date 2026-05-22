@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCC Transport Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root{
+    --primary:#003366; --accent:#C00000; --ok:#2E7D32;
+    --warn:#F9A825; --danger:#C62828; --plan:#1976D2;
+    --bg:#F4F6F9; --card:#ffffff; --text:#1F2937; --muted:#6B7280;
+    --border:#E5E7EB;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--bg);color:var(--text);font-size:16px;padding-bottom:80px}
+
+  /* Header */
+  .header{background:var(--primary);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:100;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--accent)}
+  .logo{display:flex;align-items:center;gap:8px}
+  .logo-circle{width:36px;height:36px;background:var(--accent);border-radius:50%;display:flex;align-items:center;
+    justify-content:center;color:#fff;font-weight:700;flex-shrink:0;position:relative}
+  .logo-circle svg{width:24px;height:24px}
+  .logo-text{display:flex;flex-direction:column;line-height:1}
+  .logo-text b{font-size:18px;font-weight:700}
+  .logo-text small{font-size:9px;letter-spacing:1px;color:#ffd}
+  .header h1{font-size:16px;font-weight:600;flex:1}
+  .menu-btn{background:transparent;border:0;color:#fff;font-size:24px;cursor:pointer}
+
+  /* Screens */
+  .screen{display:none;padding:16px;animation:fadein .2s}
+  .screen.active{display:block}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* Login */
+  .login-wrap{max-width:380px;margin:40px auto;background:#fff;border-radius:16px;padding:32px 24px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+  .login-icon{text-align:center;font-size:64px;color:var(--primary);margin-bottom:8px}
+  .login-wrap h2{text-align:center;color:var(--primary);margin-bottom:24px;font-weight:600}
+
+  /* Forms */
+  .form-group{margin-bottom:14px}
+  .form-group label{display:block;margin-bottom:6px;font-weight:600;color:var(--text)}
+  .form-group input,.form-group select,.form-group textarea{
+    width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:16px;background:#fff}
+  .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,51,102,.1)}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border:0;border-radius:8px;
+    font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;transition:transform .1s, opacity .2s}
+  .btn:active{transform:scale(.97)}
+  .btn-primary{background:var(--accent);color:#fff;width:100%}
+  .btn-secondary{background:var(--primary);color:#fff}
+  .btn-outline{background:transparent;border:1px solid var(--primary);color:var(--primary)}
+  .btn-sm{padding:6px 12px;font-size:14px}
+
+  /* Cards */
+  .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:12px}
+  .card h3{color:var(--primary);font-weight:600;margin-bottom:12px;font-size:18px}
+
+  /* KPI grid */
+  .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+  .kpi{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);border-left:4px solid var(--primary)}
+  .kpi.accent{border-left-color:var(--accent)}
+  .kpi.ok{border-left-color:var(--ok)}
+  .kpi.warn{border-left-color:var(--warn)}
+  .kpi .label{font-size:12px;color:var(--muted);margin-bottom:4px}
+  .kpi .value{font-size:24px;font-weight:700;color:var(--primary)}
+  .kpi .unit{font-size:12px;color:var(--muted);margin-left:4px}
+
+  /* Nav grid */
+  .nav-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .nav-tile{background:#fff;border:0;border-radius:12px;padding:16px 8px;cursor:pointer;text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);font-family:inherit;font-size:13px;color:var(--text);font-weight:600;
+    display:flex;flex-direction:column;align-items:center;gap:6px}
+  .nav-tile .ico{font-size:28px}
+  .nav-tile:hover{background:var(--primary);color:#fff}
+
+  /* Badges */
+  .badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:600;color:#fff}
+  .badge.plan{background:var(--plan)}
+  .badge.progress{background:var(--warn)}
+  .badge.done{background:var(--ok)}
+  .badge.cancel{background:var(--danger)}
+  .badge.available{background:var(--ok)}
+  .badge.inuse{background:var(--warn)}
+  .badge.maint{background:var(--danger)}
+
+  /* Schedule Grid */
+  .schedule-controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+  .schedule-controls input{flex:1;padding:10px;border:1px solid var(--border);border-radius:8px}
+  .schedule-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);font-size:13px;display:block;overflow-x:auto}
+  .schedule-table table{width:100%;border-collapse:collapse;min-width:700px}
+  .schedule-table th,.schedule-table td{padding:8px;text-align:center;border:1px solid var(--border);vertical-align:middle}
+  .schedule-table th{background:var(--primary);color:#fff;font-weight:600;font-size:12px}
+  .schedule-table td.veh{background:#f8f9fb;font-weight:600;text-align:left;min-width:120px}
+  .slot-empty{color:var(--muted);font-size:14px}
+  .slot-cell{cursor:pointer}
+  .slot-cell:hover{outline:2px solid var(--primary)}
+
+  /* Tables */
+  table.data{width:100%;background:#fff;border-collapse:collapse;border-radius:12px;overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);font-size:14px}
+  table.data th{background:var(--primary);color:#fff;padding:10px;text-align:left;font-weight:600}
+  table.data td{padding:10px;border-bottom:1px solid var(--border)}
+  table.data tr:last-child td{border-bottom:0}
+
+  /* Alert items */
+  .alert-item{background:#fff;border-left:4px solid var(--danger);border-radius:8px;padding:14px;margin-bottom:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05)}
+  .alert-item .plate{font-weight:700;color:var(--primary);font-size:18px}
+  .alert-item .meta{color:var(--muted);font-size:13px;margin-top:4px}
+  .alert-item .reason{display:inline-block;background:var(--danger);color:#fff;padding:3px 8px;border-radius:6px;font-size:12px;margin-top:8px}
+
+  /* Bottom nav */
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);
+    display:flex;justify-content:space-around;padding:8px 0;z-index:99;box-shadow:0 -2px 8px rgba(0,0,0,.05)}
+  .bottom-nav button{background:transparent;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;
+    gap:2px;color:var(--muted);font-family:inherit;font-size:11px;padding:4px 12px}
+  .bottom-nav button.active{color:var(--accent)}
+  .bottom-nav button .ico{font-size:22px}
+
+  /* Toast */
+  .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;
+    padding:10px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);z-index:200;animation:slideDown .3s}
+  .toast.err{background:var(--danger)}
+  @keyframes slideDown{from{transform:translate(-50%,-20px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+
+  @media(min-width:768px){
+    .kpi-grid{grid-template-columns:repeat(3,1fr)}
+    body{max-width:1200px;margin:0 auto;background:#fff}
+    .header{border-radius:0}
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-circle">
+      <svg viewBox="0 0 24 24" fill="#fff">
+        <circle cx="12" cy="6" r="2"/><circle cx="7" cy="10" r="2"/><circle cx="17" cy="10" r="2"/>
+        <circle cx="12" cy="12" r="2"/><circle cx="7" cy="16" r="2"/><circle cx="17" cy="16" r="2"/>
+        <circle cx="12" cy="18" r="2"/>
+      </svg>
+    </div>
+    <div class="logo-text"><b>BCC</b><small>BANGKOK CABLE</small></div>
+  </div>
+  <h1 id="screenTitle">Transport Management</h1>
+  <button class="menu-btn" onclick="alert('เมนู: เลือกหน้าจากแถบล่าง')">☰</button>
+</header>
+
+<!-- LOGIN -->
+<section id="login" class="screen active">
+  <div class="login-wrap">
+    <div class="login-icon">🚛</div>
+    <h2>Transport Management</h2>
+    <div class="form-group">
+      <label>ชื่อผู้ใช้</label>
+      <input type="text" id="loginUser" placeholder="ใส่ชื่อของคุณ" value="Siriphan">
+    </div>
+    <div class="form-group">
+      <label>รหัสผ่าน</label>
+      <input type="password" id="loginPass" placeholder="••••••" value="demo">
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <div style="text-align:center;margin-top:16px;font-size:14px;color:var(--muted)">
+      <a href="#" style="color:var(--primary);text-decoration:none">ลืมรหัสผ่าน?</a> |
+      <a href="#" style="color:var(--primary);text-decoration:none">คู่มือการใช้งาน</a>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="screen">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="label">เที่ยววันนี้</div><div class="value" id="kpiTrips">-</div></div>
+    <div class="kpi ok"><div class="label">ส่งแล้ววันนี้</div><div class="value" id="kpiDone">-</div></div>
+    <div class="kpi ok"><div class="label">รถพร้อมใช้</div><div class="value" id="kpiAvail">-</div></div>
+    <div class="kpi accent"><div class="label">ค่าซ่อมเดือนนี้</div><div class="value" id="kpiMaint">-<span class="unit">฿</span></div></div>
+    <div class="kpi warn"><div class="label">กม./ลิตร เฉลี่ย</div><div class="value" id="kpiKmL">-</div></div>
+    <div class="kpi accent"><div class="label">ต้องเปลี่ยนน้ำมัน</div><div class="value" id="kpiOil">-<span class="unit">คัน</span></div></div>
+  </div>
+
+  <div class="card">
+    <h3>📋 เมนูหลัก</h3>
+    <div class="nav-grid">
+      <button class="nav-tile" onclick="show('schedule')"><span class="ico">📅</span>ตารางขนส่ง</button>
+      <button class="nav-tile" onclick="show('newtrip')"><span class="ico">➕</span>สร้าง Trip</button>
+      <button class="nav-tile" onclick="show('fuel')"><span class="ico">⛽</span>เติมน้ำมัน</button>
+      <button class="nav-tile" onclick="show('maintenance')"><span class="ico">🔧</span>ซ่อมบำรุง</button>
+      <button class="nav-tile" onclick="show('oilchange')"><span class="ico">🛢️</span>น้ำมันเครื่อง</button>
+      <button class="nav-tile" onclick="show('alert')"><span class="ico">🚨</span>แจ้งเตือน</button>
+      <button class="nav-tile" onclick="show('report')"><span class="ico">📈</span>รายงาน</button>
+      <button class="nav-tile" onclick="show('overview')"><span class="ico">🚛</span>ภาพรวมรถ</button>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section id="schedule" class="screen">
+  <div class="schedule-controls">
+    <input type="date" id="schedDate">
+    <button class="btn btn-secondary btn-sm" onclick="loadSchedule()">โหลด</button>
+  </div>
+  <div class="schedule-table">
+    <table>
+      <thead>
+        <tr>
+          <th>ทะเบียนรถ</th>
+          <th>เช้าเที่ยว 1</th><th>เช้าเที่ยว 2</th>
+          <th>บ่ายเที่ยว 1</th><th>บ่ายเที่ยว 2</th><th>บ่ายเที่ยว 3</th>
+        </tr>
+      </thead>
+      <tbody id="schedBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- NEW TRIP -->
+<section id="newtrip" class="screen">
+  <div class="card">
+    <h3>➕ บันทึก Trip ขนส่ง</h3>
+    <div class="form-group"><label>วันที่</label><input type="date" id="tDate"></div>
+    <div class="form-group"><label>ทะเบียนรถ</label><select id="tPlate"></select></div>
+    <div class="form-group"><label>พนักงานขับ</label><select id="tDriver"></select></div>
+    <div class="form-group"><label>ชื่องาน</label><input type="text" id="tJob" placeholder="เช่น ส่งสายไฟ"></div>
+    <div class="form-group"><label>หน้างาน / ปลายทาง</label><input type="text" id="tSite"></div>
+    <div class="form-group"><label>ระยะทางไป-กลับ (กม.)</label><input type="number" id="tDist"></div>
+    <div class="form-group"><label>ช่วงเวลา</label>
+      <select id="tSlot">
+        <option>เช้าเที่ยวที่ 1</option><option>เช้าเที่ยวที่ 2</option>
+        <option>บ่ายเที่ยวที่ 1</option><option>บ่ายเที่ยวที่ 2</option><option>บ่ายเที่ยวที่ 3</option>
+      </select>
+    </div>
+    <div class="form-group"><label>วันกำหนดส่ง</label><input type="date" id="tPlan"></div>
+    <button class="btn btn-primary" onclick="saveTrip()">บันทึก Trip</button>
+  </div>
+</section>
+
+<!-- FUEL -->
+<section id="fuel" class="screen">
+  <div class="card">
+    <h3>⛽ บันทึกเติมน้ำมัน</h3>
+    <div class="form-group"><label>วันที่</label><input type="date" id="fDate"></div>
+    <div class="form-group"><label>ทะเบียนรถ</label><select id="fPlate"></select></div>
+    <div class="form-group"><label>จำนวนลิตร</label><input type="number" id="fLit" step="0.01"></div>
+    <div class="form-group"><label>ราคา/ลิตร (฿)</label><input type="number" id="fPrice" step="0.01" value="32.50"></div>
+    <div class="form-group"><label>เลขไมล์</label><input type="number" id="fOdo"></div>
+    <button class="btn btn-primary" onclick="saveFuel()">บันทึก</button>
+  </div>
+  <div class="card"><h3>ประวัติล่าสุด</h3><div id="fuelList"></div></div>
+</section>
+
+<!-- MAINTENANCE -->
+<section id="maintenance" class="screen">
+  <div class="card">
+    <h3>🔧 บันทึกซ่อมบำรุง</h3>
+    <div class="form-group"><label>วันที่</label><input type="date" id="mDate"></div>
+    <div class="form-group"><label>ทะเบียนรถ</label><select id="mPlate"></select></div>
+    <div class="form-group"><label>ประเภทการซ่อม</label>
+      <select id="mType">
+        <option>เครื่องยนต์</option><option>ช่วงล่าง</option><option>ไฟฟ้า</option>
+        <option>ยาง</option><option>เบรค</option><option>อื่นๆ</option>
+      </select>
+    </div>
+    <div class="form-group"><label>ค่าซ่อม (฿)</label><input type="number" id="mCost"></div>
+    <div class="form-group"><label>อู่ซ่อม</label><input type="text" id="mGarage"></div>
+    <div class="form-group"><label>หมายเหตุ</label><textarea id="mNote" rows="2"></textarea></div>
+    <button class="btn btn-primary" onclick="saveMaint()">บันทึก</button>
+  </div>
+  <div class="card"><h3>ประวัติซ่อมล่าสุด</h3><div id="maintList"></div></div>
+</section>
+
+<!-- OIL CHANGE -->
+<section id="oilchange" class="screen">
+  <div class="card">
+    <h3>🛢️ บันทึกถ่ายน้ำมันเครื่อง</h3>
+    <div class="form-group"><label>วันที่</label><input type="date" id="oDate"></div>
+    <div class="form-group"><label>ทะเบียนรถ</label><select id="oPlate"></select></div>
+    <div class="form-group"><label>เลขไมล์ที่เปลี่ยน</label><input type="number" id="oKm"></div>
+    <div class="form-group"><label>ค่าใช้จ่าย (฿)</label><input type="number" id="oCost"></div>
+    <div class="form-group"><label>หมายเหตุ</label><textarea id="oNote" rows="2"></textarea></div>
+    <button class="btn btn-primary" onclick="saveOil()">บันทึก</button>
+  </div>
+</section>
+
+<!-- ALERT -->
+<section id="alert" class="screen">
+  <div class="card"><h3>🚨 รถที่ต้องเปลี่ยนน้ำมันเครื่อง</h3>
+    <div id="alertList"></div>
+  </div>
+</section>
+
+<!-- REPORT -->
+<section id="report" class="screen">
+  <div class="card">
+    <h3>📈 รายงานสิ้นเปลืองน้ำมัน</h3>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input type="date" id="rFrom" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px">
+      <input type="date" id="rTo" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px">
+      <button class="btn btn-secondary btn-sm" onclick="loadReport()">ค้นหา</button>
+    </div>
+    <canvas id="reportChart" height="200"></canvas>
+  </div>
+  <div class="card"><h3>ตารางสรุป</h3>
+    <div style="overflow-x:auto">
+      <table class="data">
+        <thead><tr><th>ทะเบียน</th><th>ประเภท</th><th>กม.</th><th>ลิตร</th><th>กม./ลิตร</th></tr></thead>
+        <tbody id="reportBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- OVERVIEW -->
+<section id="overview" class="screen">
+  <div class="card">
+    <h3>🚛 ภาพรวมรถรายคัน</h3>
+    <select id="ovPlate" onchange="loadOverview()" style="width:100%;padding:11px;border:1px solid var(--border);border-radius:8px"></select>
+  </div>
+  <div id="ovDetail"></div>
+</section>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button onclick="show('dashboard')" data-nav="dashboard"><span class="ico">📊</span>หน้าแรก</button>
+  <button onclick="show('schedule')" data-nav="schedule"><span class="ico">📅</span>ตาราง</button>
+  <button onclick="show('newtrip')" data-nav="newtrip"><span class="ico">➕</span>Trip</button>
+  <button onclick="show('alert')" data-nav="alert"><span class="ico">🚨</span>แจ้งเตือน</button>
+  <button onclick="show('report')" data-nav="report"><span class="ico">📈</span>รายงาน</button>
+</nav>
+
+<script>
+const API = ""; // same origin
+const TITLES = {
+  login:"เข้าสู่ระบบ", dashboard:"Dashboard", schedule:"ตารางขนส่งรายวัน",
+  newtrip:"สร้าง Trip", fuel:"เติมน้ำมัน", maintenance:"ซ่อมบำรุง",
+  oilchange:"ถ่ายน้ำมันเครื่อง", alert:"แจ้งเตือนเปลี่ยนน้ำมัน",
+  report:"รายงานสิ้นเปลืองน้ำมัน", overview:"ภาพรวมรถรายคัน"
+};
+let VEHICLES=[], DRIVERS=[], chartRef=null;
+
+function toast(msg, isErr){
+  const t=document.createElement('div');
+  t.className='toast'+(isErr?' err':''); t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),2500);
+}
+
+async function api(path, opts={}){
+  const r = await fetch(API+path, {headers:{'Content-Type':'application/json'}, ...opts});
+  if(!r.ok){ const e=await r.json().catch(()=>({error:r.statusText})); throw new Error(e.error||'API error'); }
+  return r.json();
+}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('screenTitle').textContent = TITLES[id] || 'Transport';
+  document.querySelectorAll('.bottom-nav button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.nav===id);
+  });
+  if(id==='dashboard') loadDashboard();
+  if(id==='schedule') loadSchedule();
+  if(id==='fuel') loadFuel();
+  if(id==='maintenance') loadMaint();
+  if(id==='alert') loadAlerts();
+  if(id==='report') loadReport();
+  if(id==='overview') loadOverview();
+  window.scrollTo(0,0);
+}
+
+function doLogin(){
+  const u=document.getElementById('loginUser').value.trim();
+  if(!u){ toast('กรุณากรอกชื่อผู้ใช้', true); return; }
+  localStorage.setItem('bcc_user', u);
+  show('dashboard');
+}
+
+function fillSelect(id, items, value, label){
+  const el = document.getElementById(id);
+  el.innerHTML = items.map(it=>`<option value="${it[value]}">${it[label]||it[value]}</option>`).join('');
+}
+
+async function loadMasters(){
+  try{
+    VEHICLES = await api('/api/vehicles');
+    DRIVERS = await api('/api/drivers');
+    ['tPlate','fPlate','mPlate','oPlate','ovPlate'].forEach(id=>{
+      document.getElementById(id).innerHTML =
+        VEHICLES.map(v=>`<option value="${v.plate}">${v.plate} - ${v.vehicle_type}</option>`).join('');
+    });
+    document.getElementById('tDriver').innerHTML =
+      DRIVERS.map(d=>`<option value="${d.id}">${d.nickname} - ${d.first_name||''}</option>`).join('');
+    const today = new Date().toISOString().slice(0,10);
+    ['schedDate','tDate','fDate','mDate','oDate','tPlan','rTo'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.value = today;
+    });
+    document.getElementById('rFrom').value = new Date(Date.now()-30*86400000).toISOString().slice(0,10);
+  }catch(e){ console.error(e); toast('โหลดข้อมูลล้มเหลว: '+e.message, true); }
+}
+
+async function loadDashboard(){
+  try{
+    const d = await api('/api/dashboard');
+    document.getElementById('kpiTrips').textContent = d.trips_today;
+    document.getElementById('kpiDone').textContent  = d.completed_today;
+    document.getElementById('kpiAvail').textContent = d.available_vehicles;
+    document.getElementById('kpiMaint').innerHTML = d.maintenance_cost_month.toLocaleString()+'<span class="unit">฿</span>';
+    document.getElementById('kpiKmL').textContent  = d.avg_km_per_liter;
+    document.getElementById('kpiOil').innerHTML = d.vehicles_need_oil_change+'<span class="unit">คัน</span>';
+  }catch(e){ toast(e.message,true); }
+}
+
+const SLOTS = ['เช้าเที่ยวที่ 1','เช้าเที่ยวที่ 2','บ่ายเที่ยวที่ 1','บ่ายเที่ยวที่ 2','บ่ายเที่ยวที่ 3'];
+
+function badgeClass(s){
+  return s==='ส่งแล้ว'?'done':s==='ระหว่างส่ง'?'progress':s==='ยกเลิก'?'cancel':'plan';
+}
+
+async function loadSchedule(){
+  try{
+    const date = document.getElementById('schedDate').value;
+    const trips = await api('/api/trips?date='+date);
+    const tbody = document.getElementById('schedBody');
+    tbody.innerHTML = VEHICLES.map(v=>{
+      const cells = SLOTS.map(s=>{
+        const t = trips.find(x=>x.plate===v.plate && x.time_slot===s);
+        if(!t) return `<td class="slot-cell"><span class="slot-empty">—</span></td>`;
+        return `<td class="slot-cell"><div style="font-weight:600;font-size:13px">${t.job_name||''}</div>
+                <span class="badge ${badgeClass(t.status)}" style="margin-top:4px;font-size:11px">${t.status}</span></td>`;
+      }).join('');
+      return `<tr><td class="veh">${v.plate}<br><small style="color:var(--muted)">${v.vehicle_type}</small></td>${cells}</tr>`;
+    }).join('');
+  }catch(e){ toast(e.message,true); }
+}
+
+async function saveTrip(){
+  try{
+    await api('/api/trips',{method:'POST',body:JSON.stringify({
+      trip_date: document.getElementById('tDate').value,
+      plate: document.getElementById('tPlate').value,
+      driver_id: +document.getElementById('tDriver').value,
+      job_name: document.getElementById('tJob').value,
+      job_site: document.getElementById('tSite').value,
+      distance_km: +document.getElementById('tDist').value,
+      time_slot: document.getElementById('tSlot').value,
+      plan_date: document.getElementById('tPlan').value
+    })});
+    toast('✅ บันทึก Trip เรียบร้อย'); show('schedule');
+  }catch(e){ toast(e.message,true); }
+}
+
+async function loadFuel(){
+  try{
+    const list = await api('/api/fuel');
+    document.getElementById('fuelList').innerHTML = list.slice(0,10).map(f=>
+      `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px">
+        <b>${f.plate}</b> | ${f.log_date} | ${f.liters} ลิตร × ${f.price_per_liter} ฿ = <b>${(f.liters*f.price_per_liter).toLocaleString()} ฿</b>
+      </div>`).join('') || '<div style="color:var(--muted)">ยังไม่มีข้อมูล</div>';
+  }catch(e){ toast(e.message,true); }
+}
+
+async function saveFuel(){
+  try{
+    await api('/api/fuel',{method:'POST',body:JSON.stringify({
+      log_date: document.getElementById('fDate').value,
+      plate: document.getElementById('fPlate').value,
+      liters: +document.getElementById('fLit').value,
+      price_per_liter: +document.getElementById('fPrice').value,
+      odometer_km: +document.getElementById('fOdo').value
+    })});
+    toast('⛽ บันทึกเติมน้ำมันเรียบร้อย'); loadFuel();
+  }catch(e){ toast(e.message,true); }
+}
+
+async function loadMaint(){
+  try{
+    const list = await api('/api/maintenance');
+    document.getElementById('maintList').innerHTML = list.slice(0,10).map(m=>
+      `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px">
+        <b>${m.plate}</b> | ${m.log_date} | ${m.repair_type} | <b>${m.cost.toLocaleString()} ฿</b><br>
+        <small style="color:var(--muted)">${m.garage||''} ${m.notes||''}</small>
+      </div>`).join('') || '<div style="color:var(--muted)">ยังไม่มีข้อมูล</div>';
+  }catch(e){ toast(e.message,true); }
+}
+
+async function saveMaint(){
+  try{
+    await api('/api/maintenance',{method:'POST',body:JSON.stringify({
+      log_date: document.getElementById('mDate').value,
+      plate: document.getElementById('mPlate').value,
+      repair_type: document.getElementById('mType').value,
+      cost: +document.getElementById('mCost').value,
+      garage: document.getElementById('mGarage').value,
+      notes: document.getElementById('mNote').value
+    })});
+    toast('🔧 บันทึกซ่อมบำรุงเรียบร้อย'); loadMaint();
+  }catch(e){ toast(e.message,true); }
+}
+
+async function saveOil(){
+  try{
+    await api('/api/oilchange',{method:'POST',body:JSON.stringify({
+      log_date: document.getElementById('oDate').value,
+      plate: document.getElementById('oPlate').value,
+      odometer_km: +document.getElementById('oKm').value,
+      cost: +document.getElementById('oCost').value,
+      notes: document.getElementById('oNote').value
+    })});
+    toast('🛢️ บันทึกเรียบร้อย'); show('alert');
+  }catch(e){ toast(e.message,true); }
+}
+
+async function loadAlerts(){
+  try{
+    const list = await api('/api/alerts');
+    const el = document.getElementById('alertList');
+    if(!list.length){ el.innerHTML='<div style="color:var(--ok);text-align:center;padding:20px">✅ ไม่มีรถที่ต้องเปลี่ยนน้ำมัน</div>'; return; }
+    el.innerHTML = list.map(v=>`
+      <div class="alert-item">
+        <div class="plate">${v.plate} <small style="font-weight:400;color:var(--muted)">${v.vehicle_type}</small></div>
+        <div class="meta">ห่างจากครั้งล่าสุด: <b>${v.days_since}</b> วัน | <b>${v.km_since.toLocaleString()}</b> กม.</div>
+        <div class="reason">${v.reason}</div>
+      </div>`).join('');
+  }catch(e){ toast(e.message,true); }
+}
+
+async function loadReport(){
+  try{
+    const from = document.getElementById('rFrom').value;
+    const to = document.getElementById('rTo').value;
+    const data = await api(`/api/report/fuel?from=${from}&to=${to}`);
+    document.getElementById('reportBody').innerHTML = data.map(r=>
+      `<tr><td><b>${r.plate}</b></td><td>${r.vehicle_type}</td>
+       <td>${r.total_km.toLocaleString()}</td><td>${r.total_liters.toLocaleString()}</td>
+       <td><b style="color:var(--accent)">${r.km_per_liter}</b></td></tr>`).join('');
+
+    if(chartRef) chartRef.destroy();
+    const ctx = document.getElementById('reportChart').getContext('2d');
+    chartRef = new Chart(ctx, {
+      type:'bar',
+      data:{
+        labels:data.map(r=>r.plate),
+        datasets:[{label:'กม./ลิตร', data:data.map(r=>r.km_per_liter),
+          backgroundColor:'#003366', borderRadius:6}]
+      },
+      options:{plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
+    });
+  }catch(e){ toast(e.message,true); }
+}
+
+async function loadOverview(){
+  try{
+    const plate = document.getElementById('ovPlate').value;
+    if(!plate) return;
+    const v = VEHICLES.find(x=>x.plate===plate);
+    const trips = (await api('/api/trips')).filter(t=>t.plate===plate);
+    const fuel = (await api('/api/fuel')).filter(f=>f.plate===plate);
+    const maint = (await api('/api/maintenance')).filter(m=>m.plate===plate);
+    const totalKM = trips.filter(t=>t.status==='ส่งแล้ว').reduce((s,t)=>s+(t.distance_km||0),0);
+    const totalFuel = fuel.reduce((s,f)=>s+(f.liters||0),0);
+    const fuelCost = fuel.reduce((s,f)=>s+(f.liters||0)*(f.price_per_liter||0),0);
+    const maintCost = maint.reduce((s,m)=>s+(m.cost||0),0);
+
+    document.getElementById('ovDetail').innerHTML = `
+      <div class="kpi-grid">
+        <div class="kpi"><div class="label">ระยะทางรวม</div><div class="value">${totalKM.toLocaleString()}<span class="unit">กม.</span></div></div>
+        <div class="kpi warn"><div class="label">น้ำมันรวม</div><div class="value">${totalFuel}<span class="unit">ลิตร</span></div></div>
+        <div class="kpi accent"><div class="label">ค่าน้ำมัน</div><div class="value">${fuelCost.toLocaleString()}<span class="unit">฿</span></div></div>
+        <div class="kpi accent"><div class="label">ค่าซ่อม</div><div class="value">${maintCost.toLocaleString()}<span class="unit">฿</span></div></div>
+      </div>
+      <div class="card"><h3>ข้อมูลรถ</h3>
+        <table class="data"><tbody>
+          <tr><td>ทะเบียน</td><td><b>${v.plate}</b></td></tr>
+          <tr><td>ประเภท</td><td>${v.vehicle_type}</td></tr>
+          <tr><td>จำนวนล้อ</td><td>${v.wheels}</td></tr>
+          <tr><td>เลขไมล์ปัจจุบัน</td><td>${(v.current_km||0).toLocaleString()} กม.</td></tr>
+          <tr><td>สถานะ</td><td><span class="badge ${v.status==='พร้อมใช้'?'available':v.status==='ซ่อมบำรุง'?'maint':'inuse'}">${v.status}</span></td></tr>
+        </tbody></table>
+      </div>`;
+  }catch(e){ toast(e.message,true); }
+}
+
+// Init
+window.addEventListener('load', async ()=>{
+  await loadMasters();
+  if(localStorage.getItem('bcc_user')){
+    document.getElementById('loginUser').value = localStorage.getItem('bcc_user');
+    show('dashboard');
+  }
+});
+</script>
+</body>
+</html>
